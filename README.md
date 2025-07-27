@@ -6,10 +6,6 @@ Educational web application demonstrating client-side vs server-side password pr
 
 This project provides hands-on learning about authentication security by implementing three different password validation approaches with intentional vulnerabilities and security best practices.
 
-**Live Demo:** [View Demo](http://localhost:3000) (after running locally)
-
-![Demo Screenshot](https://via.placeholder.com/800x400?text=Password+Security+Demo+Screenshot)
-
 ## Getting Started
 
 ### Prerequisites
