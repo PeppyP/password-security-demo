@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Password Security Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .nav-tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 10px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .tab-button {
+            padding: 12px 24px;
+            margin: 0 5px;
+            border: none;
+            background: transparent;
+            color: white;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .tab-button:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .tab-button.active {
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+        }
+        
+        .tab-content {
+            display: none;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+        
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .demo-section {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+        
+        .ratings-section {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            border: 2px solid #e9ecef;
+            margin-bottom: 30px;
+        }
+        
+        .password-form {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            border: 2px solid #e9ecef;
+            max-width: 400px;
+            width: 100%;
+        }
+        
+        .password-form h3 {
+            margin-bottom: 20px;
+            color: #495057;
+            text-align: center;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #495057;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 600;
+        }
+        
+        .result.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .result.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .ratings-section {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            border: 2px solid #e9ecef;
+        }
+        
+        .ratings-section h3 {
+            margin-bottom: 20px;
+            color: #495057;
+            text-align: center;
+        }
+        
+        .rating-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+        }
+        
+        .rating-label {
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 4px;
+        }
+        
+        .rating-explanation {
+            font-size: 0.85rem;
+            color: #6c757d;
+            font-style: italic;
+        }
+        
+        .stars {
+            display: flex;
+            gap: 2px;
+        }
+        
+        .star {
+            color: #ffc107;
+            font-size: 1.2rem;
+        }
+        
+        .star.empty {
+            color: #e9ecef;
+        }
+        
+        .exploit-section {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        
+        .exploit-section h4 {
+            color: #856404;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .exploit-section h4::before {
+            content: "⚠️";
+        }
+        
+        .exploit-code {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+            margin: 10px 0;
+        }
+        
+        .info-box {
+            background: rgba(102, 126, 234, 0.1);
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        
+        .info-box h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Password Security Demo</h1>
+            <p>Learn the differences between client-side and server-side processing</p>
+        </div>
+        
+        <div class="nav-tabs">
+            <button class="tab-button active" onclick="showTab('client-side')">Client-Side Processing</button>
+            <button class="tab-button" onclick="showTab('insecure-server')">Insecure Server-Side</button>
+            <button class="tab-button" onclick="showTab('secure-server')">Secure Server-Side</button>
+        </div>
+        
+        <div id="client-side" class="tab-content active">
+            <div class="demo-section">
+                <div class="password-form">
+                    <h3>Client-Side Password Check</h3>
+                    <form onsubmit="return checkPasswordClient(event)">
+                        <div class="form-group">
+                            <label for="client-password">Password:</label>
+                            <input type="password" id="client-password" required>
+                        </div>
+                        <button type="submit" class="btn">Check Password</button>
+                    </form>
+                    <div id="client-result" class="result" style="display: none;"></div>
+                </div>
+            </div>
+            
+            <div class="ratings-section">
+                <h3>Ratings & Explanations</h3>
+                <div class="rating-item">
+                    <div>
+                        <span class="rating-label">Usability</span>
+                        <div class="rating-explanation">Instant feedback, no network delays</div>
+                    </div>
+                    <div class="stars">
+                        <span class="star">★</span>
+                        <span class="star">★</span>
+                        <span class="star">★</span>
+                        <span class="star">★</span>
+                        <span class="star">★</span>
+                    </div>
+                </div>
+                <div class="rating-item">
+                    <div>
+                        <span class="rating-label">Cost</span>
+                        <div class="rating-explanation">No server resources needed</div>
+                    </div>
+                    <div class="stars">
+                        <span class="star">★</span>
+                        <span class="star">★</span>
+                        <span class="star">★</span>
+                        <span class="star">★</span>
+                        <span class="star">★</span>
+                    </div>
+                </div>
+                <div class="rating-item">
+                    <div>
+                        <span class="rating-label">Maintenance</span>
+                        <div class="rating-explanation">Easy updates, but browser compatibility issues</div>
+                    </div>
+                    <div class="stars">
+                        <span class="star">★</span>
+                        <span class="star">★</span>
+                        <span class="star">★</span>
+                        <span class="star">★</span>
+                        <span class="star empty">★</span>
+                    </div>
+                </div>
+                <div class="rating-item">
+                    <div>
+                        <span class="rating-label">Security</span>
+                        <div class="rating-explanation">Completely bypassable - never trust the client!</div>
+                    </div>
+                    <div class="stars">
+                        <span class="star">★</span>
+                        <span class="star empty">★</span>
+                        <span class="star empty">★</span>
+                        <span class="star empty">★</span>
+                        <span class="star empty">★</span>
+                    </div>
+                </div>
+                <div class="rating-item">
+                    <div>
+                        <span class="rating-label">Server Load</span>
+                        <div class="rating-explanation">Zero server processing required</div>
+                    </div>
+                    <div class="stars">
+                        <span class="star">★</span>
+                        <span class="star">★</span>
+                        <span class="star">★</span>
+                        <span class="star">★</span>
+                        <span class="star">★</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="exploit-section">
+                <h4>How to Exploit This</h4>
+                <p>Since all validation happens on the client-side, it's easily bypassed:</p>
+                <div class="exploit-code">
+// Open browser dev tools (F12) and paste this in console:<br>
+document.getElementById('client-password').value = 'wrongpassword';<br>
+checkPasswordClient = function(e) {<br>
+    e.preventDefault();<br>
+    document.getElementById('client-result').innerHTML = 'Access Granted!';<br>
+    document.getElementById('client-result').className = 'result success';<br>
+    document.getElementById('client-result').style.display = 'block';<br>
+    return false;<br>
+}<br>
+// Now click "Check Password" - you're in!
+                </div>
+                <p><strong>Why this works:</strong> All the password checking logic is visible and modifiable in the browser. An attacker can simply change the JavaScript code or disable it entirely.</p>
+            </div>
+            
+            <div class="info-box">
+                <h4>When to Use Client-Side Processing</h4>
+                <p>Great for immediate user feedback (password strength indicators, form validation hints), reducing server load for non-sensitive operations, and improving user experience with instant responses. Never use for actual security decisions!</p>
+            </div>
+        </div>
+        
+        <div id="insecure-server" class="tab-content">
+            <div class="demo-section">
+                <div class="password-form">
+                    <h3>🖧 Insecure Server-Side Check</h3>
+                    <form onsubmit="return checkPasswordInsecure(event)">
+                        <div class="form-group">
+                            <label for="insecure-username">Username:</label>
+                            <input type="text" id="insecure-username" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="insecure-password">Password:</label>
+                            <input type="password" id="insecure-password" required>
+                        </div>
+                        <button type="submit" class="btn">Check Password</button>
+                    </form>
+                    <div id="insecure-result" class="result" style="display: none;"></div>
+                </div>
+                
+                <div class="ratings-section">
+                    <h3>Ratings & Explanations</h3>
+                    <div class="rating-item">
+                        <div>
+                            <span class="rating-label">Usability</span>
+                            <div class="rating-explanation">Network delays, but still responsive</div>
+                        </div>
+                        <div class="stars">
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star empty">★</span>
+                        </div>
+                    </div>
+                    <div class="rating-item">
+                        <div>
+                            <span class="rating-label">Cost</span>
+                            <div class="rating-explanation">Server resources needed, but minimal security overhead</div>
+                        </div>
+                        <div class="stars">
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star empty">★</span>
+                        </div>
+                    </div>
+                    <div class="rating-item">
+                        <div>
+                            <span class="rating-label">Maintenance</span>
+                            <div class="rating-explanation">Constant security patches and vulnerability monitoring</div>
+                        </div>
+                        <div class="stars">
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star empty">★</span>
+                            <span class="star empty">★</span>
+                        </div>
+                    </div>
+                    <div class="rating-item">
+                        <div>
+                            <span class="rating-label">Security</span>
+                            <div class="rating-explanation">Multiple vulnerabilities: injection, brute force, data exposure</div>
+                        </div>
+                        <div class="stars">
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star empty">★</span>
+                            <span class="star empty">★</span>
+                            <span class="star empty">★</span>
+                        </div>
+                    </div>
+                    <div class="rating-item">
+                        <div>
+                            <span class="rating-label">Server Load</span>
+                            <div class="rating-explanation">High load from attacks and inefficient processing</div>
+                        </div>
+                        <div class="stars">
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star empty">★</span>
+                            <span class="star empty">★</span>
+                            <span class="star empty">★</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="exploit-section">
+                <h4>How to Exploit This</h4>
+                <p>This simulates common server-side vulnerabilities. In a real scenario, you could:</p>
+                <div class="exploit-code">
+// 1. SQL Injection (if using database)<br>
+Username: admin'--<br>
+Password: anything<br>
+
+// 2. Brute Force Attack<br>
+// Since there's no rate limiting, automated tools can try<br>
+// thousands of password combinations per minute<br>
+
+// 3. Network Interception<br>
+// Credentials sent over HTTP can be captured with tools like:<br>
+// - Wireshark<br>
+// - Burp Suite<br>
+// - Browser dev tools Network tab<br>
+                </div>
+                <p><strong>Vulnerabilities shown:</strong> No input sanitization, no rate limiting, weak authentication logic, and potential for various injection attacks.</p>
+            </div>
+            
+            <div class="info-box">
+                <h4>Common Insecure Patterns</h4>
+                <p>Hardcoded credentials in source code, no password hashing, missing input validation, lack of rate limiting, verbose error messages that leak information, and using HTTP instead of HTTPS.</p>
+            </div>
+        </div>
+        
+        <div id="secure-server" class="tab-content">
+            <div class="demo-section">
+                <div class="password-form">
+                    <h3>Secure Server-Side Check</h3>
+                    <form onsubmit="return checkPasswordSecure(event)">
+                        <div class="form-group">
+                            <label for="secure-password">Password:</label>
+                            <input type="password" id="secure-password" required>
+                        </div>
+                        <button type="submit" class="btn">Check Password</button>
+                    </form>
+                    <div id="secure-result" class="result" style="display: none;"></div>
+                    <div id="rate-limit-warning" style="display: none; margin-top: 10px; color: #856404; font-weight: 600;">
+                        Rate limiting active - please wait before trying again
+                    </div>
+                </div>
+            </div>
+            
+            <div class="ratings-section">
+                <h3>Ratings & Explanations</h3>
+                <div class="rating-item">
+                    <div>
+                        <span class="rating-label">Usability</span>
+                        <div class="rating-explanation">Slight delays due to security processing</div>
+                    </div>
+                    <div class="stars">
+                        <span class="star">★</span>
+                        <span class="star">★</span>
+                        <span class="star">★</span>
+                        <span class="star">★</span>
+                        <span class="star empty">★</span>
+                    </div>
+                </div>
+                <div class="rating-item">
+                    <div>
+                        <span class="rating-label">Cost</span>
+                        <div class="rating-explanation">Higher server resources for encryption & security features</div>
+                    </div>
+                    <div class="stars">
+                        <span class="star">★</span>
+                        <span class="star">★</span>
+                        <span class="star">★</span>
+                        <span class="star empty">★</span>
+                        <span class="star empty">★</span>
+                    </div>
+                </div>
+                <div class="rating-item">
+                    <div>
+                        <span class="rating-label">Maintenance</span>
+                        <div class="rating-explanation">Complex security systems require expert maintenance</div>
+                    </div>
+                    <div class="stars">
+                        <span class="star">★</span>
+                        <span class="star">★</span>
+                        <span class="star empty">★</span>
+                        <span class="star empty">★</span>
+                        <span class="star empty">★</span>
+                    </div>
+                </div>
+                <div class="rating-item">
+                    <div>
+                        <span class="rating-label">Security</span>
+                        <div class="rating-explanation">Multiple security layers, industry best practices</div>
+                    </div>
+                    <div class="stars">
+                        <span class="star">★</span>
+                        <span class="star">★</span>
+                        <span class="star">★</span>
+                        <span class="star">★</span>
+                        <span class="star">★</span>
+                    </div>
+                </div>
+                <div class="rating-item">
+                    <div>
+                        <span class="rating-label">Server Load</span>
+                        <div class="rating-explanation">Heavy cryptographic operations, but efficient overall</div>
+                    </div>
+                    <div class="stars">
+                        <span class="star">★</span>
+                        <span class="star">★</span>
+                        <span class="star empty">★</span>
+                        <span class="star empty">★</span>
+                        <span class="star empty">★</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="exploit-section">
+                <h4>Why This Is Hard to Exploit</h4>
+                <p>Secure implementations include multiple layers of protection:</p>
+                <div class="exploit-code">
+// Security measures implemented:<br>
+- Rate limiting (3 attempts per minute)<br>
+- Password hashing (bcrypt with salt)<br>
+- Input validation and sanitization<br>
+- Generic error messages<br>
+- HTTPS encryption<br>
+- Session management<br>
+- Account lockout after failed attempts<br>
+- Logging and monitoring
+                </div>
+                <p><strong>Result:</strong> Even if an attacker knows about vulnerabilities, the multiple security layers make successful exploitation extremely difficult and easily detectable.</p>
+            </div>
+            
+            <div class="info-box">
+                <h4>Security Best Practices</h4>
+                <p>Always hash passwords with salt, implement rate limiting and account lockouts, validate and sanitize all inputs, use HTTPS everywhere, provide generic error messages, log security events, keep software updated, and follow the principle of least privilege.</p>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function showTab(tabId) {
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            const buttons = document.querySelectorAll('.tab-button');
+            buttons.forEach(button => button.classList.remove('active'));
+            
+            document.getElementById(tabId).classList.add('active');
+            event.target.classList.add('active');
+        }
+        
+        function checkPasswordClient(event) {
+            event.preventDefault();
+            const password = document.getElementById('client-password').value;
+            const result = document.getElementById('client-result');
+            
+            if (password === 'password123') {
+                result.textContent = 'Access Granted! Correct password.';
+                result.className = 'result success';
+            } else {
+                result.textContent = 'Invalid password';
+                result.className = 'result error';
+            }
+            result.style.display = 'block';
+            return false;
+        }
+        
+        function checkPasswordInsecure(event) {
+            event.preventDefault();
+            const password = document.getElementById('insecure-password').value;
+            const result = document.getElementById('insecure-result');
+            
+            result.textContent = 'Checking password...';
+            result.className = 'result';
+            result.style.display = 'block';
+            
+            fetch('/api/login-insecure', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ password })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    result.textContent = data.message;
+                    result.className = 'result success';
+                } else {
+                    result.textContent = data.message;
+                    result.className = 'result error';
+                }
+            })
+            .catch(error => {
+                result.textContent =  'Network error occurred';
+                result.className = 'result error';
+            });
+            
+            return false;
+        };
+        
+        let attemptCount = 0;
+        let lastAttemptTime = 0;
+        
+        function checkPasswordSecure(event) {
+            event.preventDefault();
+            const password = document.getElementById('secure-password').value;
+            const result = document.getElementById('secure-result');
+            const warning = document.getElementById('rate-limit-warning');
+            
+            result.textContent = 'Authenticating securely...';
+            result.className = 'result';
+            result.style.display = 'block';
+            warning.style.display = 'none';
+            
+            fetch('/api/login-secure', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ password })
+            })
+            .then(response => {
+                if (response.status === 429) {
+                    warning.style.display = 'block';
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    result.textContent = data.message;
+                    result.className = 'result success';
+                } else {
+                    result.textContent = data.message;
+                    result.className = 'result error';
+                    if (data.retryAfter) {
+                        warning.style.display = 'block';
+                    }
+                }
+            })
+            .catch(error => {
+                result.textContent = 'Network error occurred';
+                result.className = 'result error';
+            });
+            
+            return false;
+        }
+    </script>
+</body>
+</html>
